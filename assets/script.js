@@ -2,15 +2,16 @@ var apikey = "62039493a18c896250d3380996987ad0";
 var queryParams = { "appid": '62039493a18c896250d3380996987ad0' };
 var queryCurrentURL = "https://api.openweathermap.org/data/2.5/weather?"
 var query5DURL = "https://api.openweathermap.org/data/2.5/forecast?";
-var queryGEOURL = "https://api.openweathermap.org/geo/1.0/direct?"; //to get the latitude and longtitude of the city we want weather data from
+// var queryGEOURL = "https://api.openweathermap.org/geo/1.0/direct?"; //to get the latitude and longtitude of the city we want weather data from
 dayjs.extend(window.dayjs_plugin_relativeTime);
 
 var checkWeather = function (data) {
     var queryParams = "";
     var queryParams = { "appid": '62039493a18c896250d3380996987ad0' };
-    queryParams.lat = data[0].lat;
-    queryParams.lon = data[0].lon;
-    console.log($.param(queryParams));
+    // queryParams.lat = data[0].lat;
+    // queryParams.lon = data[0].lon;
+    // console.log($.param(queryParams));
+    queryParams.q = data.name
     queryURL = query5DURL + $.param(queryParams);
     queryCurURL = queryCurrentURL + $.param(queryParams);
     console.log(queryURL);
@@ -75,24 +76,25 @@ $("#search-button").on("click", function (event) {
     $("#forecast").empty()
 
     //grab the value of the search input
-    var searchInput = cityName()
-    queryParams.q = searchInput
-    queryParams.limit = "1"
-    var queryURL = queryGEOURL + $.param(queryParams);
+
     // console.log(queryURL);
 
-    fetch(queryURL)
-        .then(function (response) {
-            return response.json()
-                .then(function (data) {
+    // fetch(queryURL)
+    //     .then(function (response) {
+    //         return response.json()
+                // .then(function (data) {
                     //     console.log(data)
                     // console.log(data[0].lon);
                     // console.log(data[0].lat);
                     var queryParams = "";
                     var queryParams = { "appid": '62039493a18c896250d3380996987ad0' };
-                    queryParams.lat = data[0].lat;
-                    queryParams.lon = data[0].lon;
+                    // queryParams.lat = data[0].lat;
+                    // queryParams.lon = data[0].lon;
                     // console.log($.param(queryParams));
+                    var searchInput = cityName()
+                    queryParams.q = searchInput
+                    // queryParams.limit = "1"
+                    // var queryURL = queryGEOURL + $.param(queryParams);
                     queryURL = query5DURL + $.param(queryParams);
                     queryCurURL = queryCurrentURL + $.param(queryParams);
                     // console.log(queryURL);
@@ -109,19 +111,21 @@ $("#search-button").on("click", function (event) {
                                     var currentWind = $("<p>").text("wind" + data.wind.speed + "KPH");
                                     var currentHumidity = $("<p>").text("Humidity" + data.main.humidity + "%");
                                     $("#today").append(currentCity, currentIcon, currentTemp, currentWind, currentHumidity);
+                                    checkWeather(data);
                                 })
                         })
-                    checkWeather(data);
-                });
+                    
+               
 
-        })
+        // })
 
     var historyP = $('<button type = "button" class ="btn btn-light m-2 history-btn"></button>');
     historyP.attr("data-city", searchInput);
     historyP.text(searchInput);
     $('#history').prepend(historyP);
+     });
 
-})
+// })
 
 //name the function to call it in more than oneplace.
 
@@ -165,28 +169,30 @@ $(document).ready(function () {
         $("#search-input").empty();
         $("#today").empty();
         $("#forecast").empty()
-        var searchInput = $(this).attr('data-city');
-        // console.log(searchInput);
-        queryParams.q = searchInput
-        queryParams.limit = "1"
-        var queryURL = queryGEOURL + $.param(queryParams);
+
         // console.log(queryURL);
 
         //capture the value of the button that was clicked and pass that value put the function i already have which already have fetch in it.
 
-        fetch(queryURL)
-            .then(function (response) {
-                return response.json()
-                    .then(function (data) {
+        // fetch(queryURL)
+        //     .then(function (response) {
+        //         return response.json()
+        //             .then(function (data) {
                         //     console.log(data)
                         // console.log(data[0].lon);
                         // console.log(data[0].lat);
                         var queryParams = "";
                         var queryParams = { "appid": '62039493a18c896250d3380996987ad0' };
-                        queryParams.lat = data[0].lat;
-                        queryParams.lon = data[0].lon;
+                        var searchInput = $(this).attr('data-city');
+                        console.log($(this).attr('data-city'));
+                        // console.log(searchInput);
+                        queryParams.q = searchInput
+                        // queryParams.limit = "1"
+                        // var queryURL = queryGEOURL + $.param(queryParams);
+                        // queryParams.lat = data[0].lat;
+                        // queryParams.lon = data[0].lon;
                         // console.log($.param(queryParams));
-                        queryURL = query5DURL + $.param(queryParams);
+                        // queryURL = query5DURL + $.param(queryParams);
                         queryCurURL = queryCurrentURL + $.param(queryParams);
                         // console.log(queryURL);
                         // console.log(queryCurURL);
@@ -194,19 +200,21 @@ $(document).ready(function () {
                             .then(function (response) {
                                 return response.json()
                                     .then(function (data) {
-                                        // console.log(data);
+                                        console.log(data);
                                         var currentTime = dayjs().format("DD/MM/YYYY");
                                         var currentCity = $("<h1>").text(searchInput + " (" + currentTime + ")");
-                                        var currentIcon =$("<img src = https://openweathermap.org/img/wn/" + data.weather.icon + "@2x.png class='img-thumbnail'>")
+                                        var currentIcon =$("<img src = https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png class='img-thumbnail'>")
                                         var currentTemp = $("<p>").text("Temp:" + (data.main.temp - 273.15).toFixed(2) + '°C');
                                         var currentWind = $("<p>").text("wind" + data.wind.speed + "KPH");
                                         var currentHumidity = $("<p>").text("Humidity" + data.main.humidity + "%");
                                         $("#today").append(currentCity, currentIcon, currentTemp, currentWind, currentHumidity);
+                                        checkWeather(data);
                                     })
+                                  
                             })
-                        checkWeather(data);
+                       
 
                     })
             })
-    })
-})
+    // })
+// })
