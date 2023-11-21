@@ -31,11 +31,14 @@ var checkWeather = function (data) {
                         var forecastCard = $("<div class = 'card col bg-info text-dark p-2 m-1' style = 'width 18rem'>")
                         var forecastTime = dayjs().add(i + 1, "days").format("DD/MM/YYYY");
                         var forecastTimeCard = $('<li class="list-group-item bg-info">').text(forecastTime);
+                        var iconCard = $("<ul class='list-group bg-info list-group-flush'>");
+                        var forecastIcon =$("<img src = https://openweathermap.org/img/wn/" + intervalArray.weather[0].icon + "@2x.png class='img-thumbnail'>");
+                        iconCard.append(forecastIcon);
                         var forecastList = $("<ul class='list-group bg-info list-group-flush'>");
                         var forecastTemp = $('<li class="list-group-item bg-info">').text("Temp: " + (intervalArray.main.temp - 273.15).toFixed(2) + '°C');
                         var forecastWind = $('<li class="list-group-item bg-info">').text("wind: " + intervalArray.wind.speed + "KPH");
                         var forecastHumidity = $('<li class="list-group-item bg-info">').text("Humidity: " + intervalArray.main.humidity + "%");
-                        forecastList.append(forecastTimeCard, forecastTemp, forecastWind, forecastHumidity);
+                        forecastList.append(forecastTimeCard, iconCard, forecastTemp, forecastWind, forecastHumidity);
                         forecastCard.append(forecastList);
                         $('#forecast').append(forecastCard);
                         //get icon from the https://openweathermap.org/weather-conditions using the url;
@@ -45,12 +48,15 @@ var checkWeather = function (data) {
                     var endTime = dayjs().add(5, "days").format("DD/MM/YYYY");
                     var endTimeCard = $('<li class="list-group-item bg-info">').text(endTime);
                     var endCard = $("<div class = 'card col bg-info text-dark p-2 m-1' style = 'width 18rem'>")
+                    var endIconCard = $("<ul class='list-group bg-info list-group-flush'>");
+                    var endIcon =$("<img src = https://openweathermap.org/img/wn/" + intervalArray.weather[0].icon + "@2x.png class='img-thumbnail'>")
+                    endIconCard.append(endIcon);
                     var endList = $("<ul class='list-group bg-info list-group-flush'>");
                     var endList = $("<ul class='list-group bg-info list-group-flush'>");
                     var endTemp = $('<li class="list-group-item bg-info">').text("Temp: " + (endArray.main.temp - 273.15).toFixed(2) + '°C');
                     var endWind = $('<li class="list-group-item bg-info">').text("wind: " + endArray.wind.speed + "KPH");
                     var endHumidity = $('<li class="list-group-item bg-info">').text("Humidity: " + endArray.main.humidity + "%");
-                    endList.append(endTimeCard, endTemp, endWind, endHumidity);
+                    endList.append(endTimeCard, endIconCard, endTemp, endWind, endHumidity);
                     endCard.append(endList);
                     $("#forecast").append(endCard);
                 })
@@ -95,13 +101,14 @@ $("#search-button").on("click", function (event) {
                         .then(function (response) {
                             return response.json()
                                 .then(function (data) {
-                                    // console.log(data);
+                                    console.log(data);
                                     var currentTime = dayjs().format("DD/MM/YYYY");
-                                    var currentCity = $("<h1>").text($("#search-input").val().trim() + " (" + currentTime + ")");
-                                    var currentTemp = $("<p>").text((data.main.temp - 273.15).toFixed(2) + '°C');
-                                    var currentWind = $("<p>").text(data.wind.speed + "KPH");
-                                    var currentHumidity = $("<p>").text(data.main.humidity + "%");
-                                    $("#today").append(currentCity, currentTemp, currentWind, currentHumidity);
+                                    var currentCity = $("<h1>").text(searchInput + " (" + currentTime + ")");
+                                    var currentIcon =$("<img src = https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png class='img-thumbnail'>")
+                                    var currentTemp = $("<p>").text("Temp:" + (data.main.temp - 273.15).toFixed(2) + '°C');
+                                    var currentWind = $("<p>").text("wind" + data.wind.speed + "KPH");
+                                    var currentHumidity = $("<p>").text("Humidity" + data.main.humidity + "%");
+                                    $("#today").append(currentCity, currentIcon, currentTemp, currentWind, currentHumidity);
                                 })
                         })
                     checkWeather(data);
@@ -190,10 +197,11 @@ $(document).ready(function () {
                                         // console.log(data);
                                         var currentTime = dayjs().format("DD/MM/YYYY");
                                         var currentCity = $("<h1>").text(searchInput + " (" + currentTime + ")");
-                                        var currentTemp = $("<p>").text((data.main.temp - 273.15).toFixed(2) + '°C');
-                                        var currentWind = $("<p>").text(data.wind.speed + "KPH");
-                                        var currentHumidity = $("<p>").text(data.main.humidity + "%");
-                                        $("#today").append(currentCity, currentTemp, currentWind, currentHumidity);
+                                        var currentIcon =$("<img src = https://openweathermap.org/img/wn/" + data.weather.icon + "@2x.png class='img-thumbnail'>")
+                                        var currentTemp = $("<p>").text("Temp:" + (data.main.temp - 273.15).toFixed(2) + '°C');
+                                        var currentWind = $("<p>").text("wind" + data.wind.speed + "KPH");
+                                        var currentHumidity = $("<p>").text("Humidity" + data.main.humidity + "%");
+                                        $("#today").append(currentCity, currentIcon, currentTemp, currentWind, currentHumidity);
                                     })
                             })
                         checkWeather(data);
