@@ -1,8 +1,8 @@
 var apikey = "62039493a18c896250d3380996987ad0";
 var queryParams = { "appid": '62039493a18c896250d3380996987ad0' };
 var queryCurrentURL = "https://api.openweathermap.org/data/2.5/weather?"
-var query5DURL = "http://api.openweathermap.org/data/2.5/forecast?";
-var queryGEOURL = "http://api.openweathermap.org/geo/1.0/direct?"; //to get the latitude and longtitude of the city we want weather data from
+var query5DURL = "https://api.openweathermap.org/data/2.5/forecast?";
+var queryGEOURL = "https://api.openweathermap.org/geo/1.0/direct?"; //to get the latitude and longtitude of the city we want weather data from
 dayjs.extend(window.dayjs_plugin_relativeTime);
 
 var checkWeather = function (data) {
